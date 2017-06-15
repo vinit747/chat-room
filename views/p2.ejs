@@ -1,0 +1,69 @@
+<html>
+<head>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+	var t;
+	function empty(xw)
+	{
+		setTimeout(function(){
+			document.getElementById(xw).innerHTML=" ";
+		},2000);
+	}
+		$(document).ready(function() {
+			document.getElementById('rec').innerHTML="";
+			var socket = io();
+			socket.emit("entered",me);
+			socket.on("broad",function(nw){
+				document.getElementById("serv").innerHTML="New user : "+nw+" connected";
+				empty("serv");
+			});
+			socket.on("nbroad",function(vc){
+				document.getElementById("serv").innerHTML="user left : "+vc+" .";
+				empty("serv");
+			})
+			socket.on("online",function(xz){
+				//empty("line");
+				document.getElementById("line").innerHTML="People Online Are : "+xz;
+			});
+			socket.on("ty",function(who){
+				document.getElementById("serv").innerHTML=who+" is typing ...";
+			});
+			$("#msg").keypress(function(){
+				socket.emit("typing",me);
+			});
+			$("#but").click(function(){
+
+				socket.emit("usr",me);
+				socket.emit('msgs',$("#msg").val());
+
+				$("#msg").val("");
+				return false;
+			});
+			socket.on("typer",function(ty){
+				t=ty;
+				if(ty==me)
+					t="me";
+			});
+			socket.on("msgs",function(m){
+				empty("serv");
+				document.getElementById('rec').innerHTML+="<ul><li>"+t+" : "+m+"</li></ul>";
+			});
+			
+		});
+	</script>
+</head>
+<body>
+	<script type="text/javascript">
+	var me;
+	me="<%=us%>";
+	
+	</script>
+	<textarea id='msg' rows="2" cols="50"  placeholder="Enter you message here"></textarea>
+	<br><br>
+	<button id='but'>Send</button><br>
+	<p id='rec'> </p>
+	<p id="serv"></p>
+	<p id='line'></p>
+</body>
+</html>
