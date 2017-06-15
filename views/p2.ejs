@@ -8,7 +8,7 @@
 	{
 		setTimeout(function(){
 			document.getElementById(xw).innerHTML=" ";
-		},2000);
+		},1400);
 	}
 		$(document).ready(function() {
 			document.getElementById('rec').innerHTML="";
@@ -27,7 +27,10 @@
 				document.getElementById("line").innerHTML="People Online Are : "+xz;
 			});
 			socket.on("ty",function(who){
-				document.getElementById("serv").innerHTML=who+" is typing ...";
+				if(who==me)
+					document.getElementById("serv").innerHTML=" ";
+				else
+					document.getElementById("serv").innerHTML=who+" is typing ...";
 			});
 			$("#msg").keypress(function(){
 				socket.emit("typing",me);

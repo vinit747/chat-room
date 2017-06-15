@@ -53,7 +53,8 @@ io.on('connection', function(socket){
     io.emit("msgs",m);
   }); 
   socket.on('disconnect', function(){
-    var str=(socket.handshake.headers.referer).substr(32);
+    var s=(socket.handshake.headers.referer).indexOf("=");
+    var str=(socket.handshake.headers.referer).substr(s+1);
     var pos=onl.indexOf(str);
     onl.splice(pos,1);
     io.emit("nbroad",str);
